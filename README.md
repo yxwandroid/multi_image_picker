@@ -22,7 +22,7 @@ First add the plugin to your project
   dependencies:
     flutter:
       sdk: flutter
-    multi_image_picker: 1.0.2
+    multi_image_picker: 1.0.3
 ```
 
 ### iOS
