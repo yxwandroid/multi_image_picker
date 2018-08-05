@@ -3,7 +3,7 @@
 #
 Pod::Spec.new do |s|
   s.name             = 'multi_image_picker'
-  s.version          = '1.0.1'
+  s.version          = '1.0.2'
   s.summary          = 'Multi image picker'
   s.description      = <<-DESC
 A new flutter plugin project.
@@ -17,7 +17,7 @@ A new flutter plugin project.
   s.dependency 'Flutter'
   s.dependency 'BSImagePicker', '~> 2.8'
   s.static_framework = true
-  
+
   s.ios.deployment_target = '8.0'
 end
 
