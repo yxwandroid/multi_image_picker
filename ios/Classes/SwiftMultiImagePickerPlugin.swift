@@ -11,6 +11,7 @@ public class SwiftMultiImagePickerPlugin: NSObject, FlutterPlugin {
     
     init(cont: FlutterViewController) {
         controller = cont;
+        super.init();
     }
     
     public static func register(with registrar: FlutterPluginRegistrar) {
