@@ -4,6 +4,12 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](http://keepachangelog.com/)
 and this project adheres to [Semantic Versioning](http://semver.org/).
 
+### Changed (v1.0.5)
+
+## 2018-08-07
+### Add
+- Support iOS and Android customizations
+
 ### Changed (v1.0.4)
 
 ## 2018-08-06

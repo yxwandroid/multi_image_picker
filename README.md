@@ -40,6 +40,14 @@ You need to request those permissions in AndroidManifest.xml in order the plugin
 
 For example code usage, please see [here](https://github.com/Sh1d0w/multi_image_picker/blob/master/example/lib/main.dart)
 
+## Theming and localization
+
+You can customize different parts of the gallery picker. For reference see below the available options for the different platforms:
+
+Customization on [Android](https://github.com/Sh1d0w/multi_image_picker/tree/master/docs/android.md)
+
+Customization on [iOS](https://github.com/Sh1d0w/multi_image_picker/tree/master/docs/ios.md)
+
 ## API
 
 ### pickImages(maxImages: int)
@@ -52,7 +60,7 @@ Maximum allowed images to be selected.
 
 ## TODO
 
-- [ ] Add support for more plugin specific options for iOS and Android, that allows more customization
+- [x] Add support for more plugin specific options for iOS and Android, that allows more customization
 - [ ] Allow choosing videos
 
 ## Related
