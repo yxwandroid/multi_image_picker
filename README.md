@@ -44,9 +44,9 @@ For example code usage, please see [here](https://github.com/Sh1d0w/multi_image_
 
 You can customize different parts of the gallery picker. For reference see below the available options for the different platforms:
 
-Customization on [Android](https://github.com/Sh1d0w/multi_image_picker/tree/master/docs/android.md)
+Customization on [Android](https://github.com/Sh1d0w/multi_image_picker/tree/master/doc/android.md)
 
-Customization on [iOS](https://github.com/Sh1d0w/multi_image_picker/tree/master/docs/ios.md)
+Customization on [iOS](https://github.com/Sh1d0w/multi_image_picker/tree/master/doc/ios.md)
 
 ## API
 
