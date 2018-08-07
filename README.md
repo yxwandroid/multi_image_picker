@@ -16,14 +16,7 @@ For the Android picker the plugin uses [Matisse](https://github.com/zhihu/Matiss
 
 ## Usage
 
-First add the plugin to your project
-
-```yaml
-  dependencies:
-    flutter:
-      sdk: flutter
-    multi_image_picker: 1.0.3
-```
+First you need to [add](https://pub.dartlang.org/packages/multi_image_picker#-installing-tab-) the plugin to your project.
 
 ### iOS
 
