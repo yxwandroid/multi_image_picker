@@ -4,6 +4,12 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](http://keepachangelog.com/)
 and this project adheres to [Semantic Versioning](http://semver.org/).
 
+### Changed (v1.0.6)
+
+## 2018-08-07
+### Changed
+- Fix a crash on Android caused by closing and reopening the gallery
+
 ### Changed (v1.0.5)
 
 ## 2018-08-07

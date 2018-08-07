@@ -14,6 +14,7 @@ import com.zhihu.matisse.engine.impl.GlideEngine;
 import android.content.pm.ActivityInfo;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 
 import android.Manifest;
@@ -141,6 +142,10 @@ public class MultiImagePickerPlugin implements MethodCallHandler, PluginRegistry
             return true;
         } else if (requestCode == REQUEST_CODE_GRANT_PERMISSIONS && resultCode == Activity.RESULT_OK) {
             presentPicker();
+            return true;
+        } else {
+            finishWithSuccess(Collections.emptyList());
+            clearMethodCallAndResult();
         }
         return false;
     }
