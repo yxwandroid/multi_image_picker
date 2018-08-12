@@ -4,7 +4,13 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](http://keepachangelog.com/)
 and this project adheres to [Semantic Versioning](http://semver.org/).
 
-### Changed (v1.0.6)
+### Changed (v1.0.52)
+
+## 2018-08-12
+### Fixed
+- Picking images on iOS now will properly handle PHAssets
+
+### Changed (v1.0.51)
 
 ## 2018-08-07
 ### Changed
