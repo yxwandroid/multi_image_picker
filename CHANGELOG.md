@@ -4,6 +4,12 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](http://keepachangelog.com/)
 and this project adheres to [Semantic Versioning](http://semver.org/).
 
+### Changed (v1.0.53)
+
+## 2018-08-13
+### Fixed
+- Fix crash on iOS when picking a lot of images.
+
 ### Changed (v1.0.52)
 
 ## 2018-08-12

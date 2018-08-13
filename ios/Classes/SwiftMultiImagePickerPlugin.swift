@@ -85,7 +85,7 @@ public class SwiftMultiImagePickerPlugin: NSObject, FlutterPlugin {
         }
     }
     
-    func getAsset(asset: PHAsset, completionHandler : @escaping ((_ image : NSData) -> Void)) {
+    func getAsset(asset: PHAsset, completionHandler : @escaping ((_ image : String) -> Void)) {
         let manager = PHImageManager.default()
         let options = PHImageRequestOptions()
         
@@ -95,33 +95,34 @@ public class SwiftMultiImagePickerPlugin: NSObject, FlutterPlugin {
         
         manager.requestImage(for: asset, targetSize: PHImageManagerMaximumSize, contentMode: PHImageContentMode.aspectFill, options: options, resultHandler: {
             (image, info) in
-            let imageData: NSData = UIImageJPEGRepresentation(image!, 1.0)! as NSData
-            completionHandler(imageData)
+            let image: NSData = UIImageJPEGRepresentation(image!, 1.0)! as NSData
+            let uuid = UUID().uuidString
+            let documentsDirectory = FileManager.default.urls(for: .documentDirectory, in: .userDomainMask).first!
+            let fileName = String(format: "multi_image_picker_%@.jpg", uuid)
+            let fileURL = documentsDirectory.appendingPathComponent(fileName)
+            
+            if !FileManager.default.fileExists(atPath: fileURL.path) {
+                do {
+                    try image.write(to: fileURL)
+                    completionHandler(fileURL.path)
+                } catch {
+                    print("error saving file:", error)
+                }
+            }
         })
     }
     
     func getUrlsFromPHAssets(assets: [PHAsset], completion: @escaping ((_ urls:[String]) -> ())) {
         var array = [String]()
         let group = DispatchGroup()
-        let documentsDirectory = FileManager.default.urls(for: .documentDirectory, in: .userDomainMask).first!
 
         for asset in assets {
-            group.enter()
-            self.getAsset(asset: asset) { (image) in
-                let uuid = UUID().uuidString
-                let fileName = String(format: "multi_image_picker_%@.jpg", uuid)
-                let fileURL = documentsDirectory.appendingPathComponent(fileName)
-                
-                if !FileManager.default.fileExists(atPath: fileURL.path) {
-                    do {
-                        try image.write(to: fileURL)
-                        array.append(fileURL.path)
-                    } catch {
-                        print("error saving file:", error)
-                    }
+            autoreleasepool {
+                group.enter()
+                self.getAsset(asset: asset) { (image) in
+                    array.append(image)
+                    group.leave()
                 }
-                
-                group.leave()
             }
         }
         // This closure will be called once group.leave() is called
