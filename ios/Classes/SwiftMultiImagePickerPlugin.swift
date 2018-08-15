@@ -6,11 +6,13 @@ import BSImagePicker
 public class SwiftMultiImagePickerPlugin: NSObject, FlutterPlugin {
     var controller: FlutterViewController!
     var imagesResult: FlutterResult?
+    var messenger: FlutterBinaryMessenger;
     
     let genericError = "500"
     
-    init(cont: FlutterViewController) {
-        controller = cont;
+    init(cont: FlutterViewController, messenger: FlutterBinaryMessenger) {
+        self.controller = cont;
+        self.messenger = messenger;
         super.init();
     }
     
@@ -19,7 +21,7 @@ public class SwiftMultiImagePickerPlugin: NSObject, FlutterPlugin {
         
         let app =  UIApplication.shared
         let controller : FlutterViewController = app.delegate!.window!!.rootViewController as! FlutterViewController;
-        let instance = SwiftMultiImagePickerPlugin.init(cont: controller)
+        let instance = SwiftMultiImagePickerPlugin.init(cont: controller, messenger: registrar.messenger())
         registrar.addMethodCallDelegate(instance, channel: channel)
     }
     
@@ -76,59 +78,80 @@ public class SwiftMultiImagePickerPlugin: NSObject, FlutterPlugin {
                 }, cancel: { (assets: [PHAsset]) -> Void in
                     result([])
                 }, finish: { (assets: [PHAsset]) -> Void in
-                    self.getUrlsFromPHAssets(assets: assets, completion: { (urls) in
-                        result(urls)
-                    })
+                    var results = [NSDictionary]();
+                    for asset in assets {
+                        results.append([
+                            "identifier": asset.localIdentifier,
+                            "width": asset.pixelWidth,
+                            "height": asset.pixelHeight
+                        ]);
+                    }
+                    result(results);
                 }, completion: nil)
+        case "requestThumbnail":
+            let arguments = call.arguments as! Dictionary<String, AnyObject>
+            let identifier = arguments["identifier"] as! String
+            let width = arguments["width"] as! Int
+            let height = arguments["height"] as! Int
+            
+            let manager = PHImageManager.default()
+            let options = PHImageRequestOptions()
+            
+            options.deliveryMode = PHImageRequestOptionsDeliveryMode.fastFormat
+            options.resizeMode = PHImageRequestOptionsResizeMode.fast
+            options.isSynchronous = false
+            options.isNetworkAccessAllowed = false
+            
+            let assets: PHFetchResult = PHAsset.fetchAssets(withLocalIdentifiers: [identifier], options: nil)
+            
+            if (assets.count > 0) {
+                let asset: PHAsset = assets[0];
+                
+                let ID: PHImageRequestID = manager.requestImage(
+                    for: asset,
+                    targetSize: CGSize(width: width, height: height),
+                    contentMode: PHImageContentMode.aspectFill,
+                    options: options,
+                    resultHandler: {
+                        (image: UIImage?, info) in
+                        self.messenger.send(onChannel: "multi_image_picker/image/" + identifier, message: UIImageJPEGRepresentation(image!, 1.0))
+                        })
+                
+                if(PHInvalidImageRequestID != ID) {
+                    result(true);
+                }
+            }
+        case "requestOriginal":
+            let arguments = call.arguments as! Dictionary<String, AnyObject>
+            let identifier = arguments["identifier"] as! String
+            let manager = PHImageManager.default()
+            let options = PHImageRequestOptions()
+            
+            options.deliveryMode = PHImageRequestOptionsDeliveryMode.highQualityFormat
+            options.isSynchronous = false
+            options.isNetworkAccessAllowed = true
+            
+            let assets: PHFetchResult = PHAsset.fetchAssets(withLocalIdentifiers: [identifier], options: nil)
+            
+            if (assets.count > 0) {
+                let asset: PHAsset = assets[0];
+                
+                let ID: PHImageRequestID = manager.requestImage(
+                    for: asset,
+                    targetSize: PHImageManagerMaximumSize,
+                    contentMode: PHImageContentMode.aspectFill,
+                    options: options,
+                    resultHandler: {
+                        (image: UIImage?, info) in
+                        self.messenger.send(onChannel: "multi_image_picker/image/" + identifier, message: UIImageJPEGRepresentation(image!, 1.0))
+                })
+                
+                if(PHInvalidImageRequestID != ID) {
+                    result(true);
+                }
+            }
         default:
             result(FlutterMethodNotImplemented)
-        }
-    }
-    
-    func getAsset(asset: PHAsset, completionHandler : @escaping ((_ image : String) -> Void)) {
-        let manager = PHImageManager.default()
-        let options = PHImageRequestOptions()
-        
-        options.deliveryMode = PHImageRequestOptionsDeliveryMode.highQualityFormat
-        options.isSynchronous = false
-        options.isNetworkAccessAllowed = true
-        
-        manager.requestImage(for: asset, targetSize: PHImageManagerMaximumSize, contentMode: PHImageContentMode.aspectFill, options: options, resultHandler: {
-            (image, info) in
-            let image: NSData = UIImageJPEGRepresentation(image!, 1.0)! as NSData
-            let uuid = UUID().uuidString
-            let documentsDirectory = FileManager.default.urls(for: .documentDirectory, in: .userDomainMask).first!
-            let fileName = String(format: "multi_image_picker_%@.jpg", uuid)
-            let fileURL = documentsDirectory.appendingPathComponent(fileName)
-            
-            if !FileManager.default.fileExists(atPath: fileURL.path) {
-                do {
-                    try image.write(to: fileURL)
-                    completionHandler(fileURL.path)
-                } catch {
-                    print("error saving file:", error)
-                }
-            }
-        })
-    }
-    
-    func getUrlsFromPHAssets(assets: [PHAsset], completion: @escaping ((_ urls:[String]) -> ())) {
-        var array = [String]()
-        let group = DispatchGroup()
-
-        for asset in assets {
-            autoreleasepool {
-                group.enter()
-                self.getAsset(asset: asset) { (image) in
-                    array.append(image)
-                    group.leave()
-                }
-            }
-        }
-        // This closure will be called once group.leave() is called
-        // for every asset in the above for loop
-        group.notify(queue: .main) {
-            completion(array)
         }
     }
 

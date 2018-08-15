@@ -3,7 +3,9 @@ import 'dart:io';
 import 'dart:async';
 
 import 'package:flutter/services.dart';
+import 'package:multi_image_picker/asset.dart';
 import 'package:multi_image_picker/multi_image_picker.dart';
+import 'package:multi_image_picker_example/asset_view.dart';
 
 void main() => runApp(new MyApp());
 
@@ -13,7 +15,7 @@ class MyApp extends StatefulWidget {
 }
 
 class _MyAppState extends State<MyApp> {
-  List<File> images;
+  List<Asset> images = List<Asset>();
   String _error;
 
   @override
@@ -21,9 +23,18 @@ class _MyAppState extends State<MyApp> {
     super.initState();
   }
 
-  Future<void> pickImages() async {
+  Widget buildGridView() {
+    return GridView.count(
+      crossAxisCount: 3,
+      children: List.generate(images.length, (index) {
+        return AssetView(index, images[index]);
+      }),
+    );
+  }
+
+  Future<void> loadAssets() async {
     setState(() {
-      images = null;
+      images = List<Asset>();
     });
 
     List resultList;
@@ -31,7 +42,7 @@ class _MyAppState extends State<MyApp> {
 
     try {
       resultList = await MultiImagePicker.pickImages(
-        maxImages: 3,
+        maxImages: 300,
       );
     } on PlatformException catch (e) {
       error = e.message;
@@ -55,47 +66,17 @@ class _MyAppState extends State<MyApp> {
         appBar: new AppBar(
           title: const Text('Plugin example app'),
         ),
-        body: new Container(
-          padding: const EdgeInsets.all(8.0),
-          child: new Column(
-            mainAxisAlignment: MainAxisAlignment.center,
-            crossAxisAlignment: CrossAxisAlignment.center,
-            children: <Widget>[
-              images == null
-                  ? new Container(
-                      height: 300.0,
-                      width: 400.0,
-                      child: new Icon(
-                        Icons.image,
-                        size: 250.0,
-                        color: Theme.of(context).primaryColor,
-                      ),
-                    )
-                  : new SizedBox(
-                      height: 300.0,
-                      width: 400.0,
-                      child: new ListView.builder(
-                        scrollDirection: Axis.horizontal,
-                        itemBuilder: (BuildContext context, int index) =>
-                            new Padding(
-                              padding: const EdgeInsets.all(5.0),
-                              child: new Image.file(
-                                images[index],
-                              ),
-                            ),
-                        itemCount: images.length,
-                      ),
-                    ),
-              new Padding(
-                padding: const EdgeInsets.all(8.0),
-                child: new Text('Error Dectected: $_error'),
-              ),
-              new RaisedButton.icon(
-                  onPressed: pickImages,
-                  icon: new Icon(Icons.image),
-                  label: new Text("Pick-Up Images")),
-            ],
-          ),
+        body: Column(
+          children: <Widget>[
+            Center(child: Text('Error: $_error')),
+            RaisedButton(
+              child: Text("Pick images"),
+              onPressed: loadAssets,
+            ),
+            Expanded(
+              child: buildGridView(),
+            )
+          ],
         ),
       ),
     );

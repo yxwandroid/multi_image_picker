@@ -61,6 +61,7 @@ Maximum allowed images to be selected.
 ## TODO
 
 - [x] Add support for more plugin specific options for iOS and Android, that allows more customization
+- [ ] Improve docs
 - [ ] Allow choosing videos
 
 ## Related

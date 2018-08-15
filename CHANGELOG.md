@@ -4,6 +4,17 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](http://keepachangelog.com/)
 and this project adheres to [Semantic Versioning](http://semver.org/).
 
+### Changed (v2.0.0)
+
+## 2018-08-15
+### BREAKING CHANGE
+- The plugin have been redesigned to be more responsive and flexible.
+- pickImages method will no longer return List<File>, instead it will return List<Asset>
+- You can then request asset thumbnails or the original image, which will load asyncrhoniously without blocking the main UI thred. For more info see the examples directory.
+
+### Added
+- `Asset` class, with methods `requestThumbnail(int width, int height, callback)` and `requestOriginal(callback)`
+
 ### Changed (v1.0.53)
 
 ## 2018-08-13
