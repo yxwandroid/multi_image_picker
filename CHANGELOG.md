@@ -4,6 +4,12 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](http://keepachangelog.com/)
 and this project adheres to [Semantic Versioning](http://semver.org/).
 
+### Changed (v2.1.01)
+
+## 2018-08-16
+### Change
+- Add getters to Asset class
+
 ### Changed (v2.1.00)
 
 ## 2018-08-16

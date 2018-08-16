@@ -5,8 +5,8 @@ import 'package:multi_image_picker/picker.dart';
 
 class Asset {
   String _identifier;
-  ByteData thumbData;
-  ByteData imageData;
+  ByteData _thumbData;
+  ByteData _imageData;
 
   Asset(this._identifier);
 
@@ -14,10 +14,22 @@ class Asset {
     return 'multi_image_picker/image/$_identifier';
   }
 
+  ByteData get thumbData {
+    return _thumbData;
+  }
+
+  ByteData get imageData {
+    return _imageData;
+  }
+
+  String get identifier {
+    return _identifier;
+  }
+
   Future<dynamic> requestThumbnail(int width, int height) {
     Completer completer = new Completer();
     BinaryMessages.setMessageHandler(_channel, (ByteData message) {
-      thumbData = message;
+      _thumbData = message;
       completer.complete(message);
       BinaryMessages.setMessageHandler(_channel, null);
     });
@@ -29,7 +41,7 @@ class Asset {
   Future<dynamic> requestOriginal() {
     Completer completer = new Completer();
     BinaryMessages.setMessageHandler(_channel, (ByteData message) {
-      imageData = message;
+      _imageData = message;
       completer.complete(message);
       BinaryMessages.setMessageHandler(_channel, null);
     });
