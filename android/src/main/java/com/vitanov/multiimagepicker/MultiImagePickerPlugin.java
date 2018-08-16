@@ -153,7 +153,7 @@ public class MultiImagePickerPlugin implements MethodCallHandler, PluginRegistry
             }
             final ByteBuffer buffer = ByteBuffer.allocateDirect(bytesArray.length);
             buffer.put(bytesArray);
-            this.messenger.send("multi_image_picker/image/" + this.path, buffer);
+            this.messenger.send("multi_image_picker/image/" + this.identifier, buffer);
             return null;
         }
     }

@@ -4,6 +4,12 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](http://keepachangelog.com/)
 and this project adheres to [Semantic Versioning](http://semver.org/).
 
+### Changed (v2.0.01)
+
+## 2018-08-13
+### Fixed
+- Fix picking original image on Android was not triggering properly the callback
+
 ### Changed (v2.0.0)
 
 ## 2018-08-15
