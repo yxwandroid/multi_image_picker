@@ -21,10 +21,7 @@ class MultiImagePicker {
 
     var assets = List<Asset>();
     for (var item in images) {
-      var asset = Asset();
-      asset.identifier = item['identifier'];
-      asset.width = item['width'];
-      asset.height = item['height'];
+      var asset = Asset(item['identifier']);
       assets.add(asset);
     }
     return assets;

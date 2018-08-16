@@ -19,17 +19,19 @@ class AssetState extends State<AssetView> {
   @override
   void initState() {
     super.initState();
+    _loadImage();
+  }
 
-    this._asset.requestThumbnail(300, 300, (imageData) {
-      setState(() {});
-    });
+  void _loadImage() async {
+    await this._asset.requestThumbnail(300, 300);
+    setState(() {});
   }
 
   @override
   Widget build(BuildContext context) {
-    if (null != this._asset.imageData) {
+    if (null != this._asset.thumbData) {
       return Image.memory(
-        this._asset.imageData.buffer.asUint8List(),
+        this._asset.thumbData.buffer.asUint8List(),
         fit: BoxFit.cover,
       );
     }
