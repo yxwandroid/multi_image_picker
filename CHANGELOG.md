@@ -4,9 +4,15 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](http://keepachangelog.com/)
 and this project adheres to [Semantic Versioning](http://semver.org/).
 
+### Changed (v2.0.02)
+
+## 2018-08-16
+### Fixed
+- Improve thumbs quality on iOS to always deliver best of it
+
 ### Changed (v2.0.01)
 
-## 2018-08-13
+## 2018-08-16
 ### Fixed
 - Fix picking original image on Android was not triggering properly the callback
 

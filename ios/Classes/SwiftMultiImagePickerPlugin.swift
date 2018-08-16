@@ -97,8 +97,8 @@ public class SwiftMultiImagePickerPlugin: NSObject, FlutterPlugin {
             let manager = PHImageManager.default()
             let options = PHImageRequestOptions()
             
-            options.deliveryMode = PHImageRequestOptionsDeliveryMode.fastFormat
-            options.resizeMode = PHImageRequestOptionsResizeMode.fast
+            options.deliveryMode = PHImageRequestOptionsDeliveryMode.highQualityFormat
+            options.resizeMode = PHImageRequestOptionsResizeMode.exact
             options.isSynchronous = false
             options.isNetworkAccessAllowed = false
             
@@ -110,7 +110,7 @@ public class SwiftMultiImagePickerPlugin: NSObject, FlutterPlugin {
                 let ID: PHImageRequestID = manager.requestImage(
                     for: asset,
                     targetSize: CGSize(width: width, height: height),
-                    contentMode: PHImageContentMode.aspectFill,
+                    contentMode: PHImageContentMode.aspectFit,
                     options: options,
                     resultHandler: {
                         (image: UIImage?, info) in
