@@ -249,38 +249,15 @@ public class MultiImagePickerPlugin implements MethodCallHandler, PluginRegistry
         return null;
     }
 
-    private static String getIdColumn(Context context, Uri uri, String selection,
-                                        String[] selectionArgs) {
-
-        Cursor cursor = null;
-        final String[] projection = {
-                MediaStore.Images.ImageColumns._ID
-        };
-
-        try {
-            cursor = context.getContentResolver().query(uri, projection, selection, selectionArgs, null);
-            if (cursor != null && cursor.moveToFirst()) {
-                final int column_index = cursor.getColumnIndexOrThrow(MediaStore.Images.ImageColumns._ID);
-                return cursor.getString(column_index);
-            }
-        }
-        finally {
-            if (cursor != null)
-                cursor.close();
-        }
-        return null;
-    }
-
 
     @Override
     public boolean onActivityResult(int requestCode, int resultCode, Intent data) {
         if (requestCode == REQUEST_CODE_CHOOSE && resultCode == Activity.RESULT_OK) {
             List<Uri> photos = Matisse.obtainResult(data);
-            List<HashMap<String, String>> result = new ArrayList<HashMap<String, String>>(photos.size());
+            List<HashMap<String, String>> result = new ArrayList<>(photos.size());
             for (Uri uri : photos) {
-                HashMap map = new HashMap();
+                HashMap<String, String> map = new HashMap<>();
                 map.put("identifier", uri.toString());
-                //map.put("identifier", getDataColumn(this.context, url, null, null));
                 // TODO implement this
                 map.put("width", null);
                 map.put("height", null);
