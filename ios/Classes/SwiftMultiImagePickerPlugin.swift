@@ -100,7 +100,7 @@ public class SwiftMultiImagePickerPlugin: NSObject, FlutterPlugin {
             options.deliveryMode = PHImageRequestOptionsDeliveryMode.highQualityFormat
             options.resizeMode = PHImageRequestOptionsResizeMode.exact
             options.isSynchronous = false
-            options.isNetworkAccessAllowed = false
+            options.isNetworkAccessAllowed = true
             
             let assets: PHFetchResult = PHAsset.fetchAssets(withLocalIdentifiers: [identifier], options: nil)
             
