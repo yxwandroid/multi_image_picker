@@ -11,6 +11,10 @@ void main() {
     setUp(() {
       channel.setMockMethodCallHandler((MethodCall methodCall) async {
         log.add(methodCall);
+        if (methodCall.method == 'requestOriginal' ||
+            methodCall.method == 'requestThumbnail') {
+          return true;
+        }
         return [
           {'identifier': 'SOME_ID_1'},
           {'identifier': 'SOME_ID_2'}
@@ -60,6 +64,52 @@ void main() {
       test('does not accept a negative images count', () {
         expect(
           MultiImagePicker.pickImages(maxImages: -10),
+          throwsArgumentError,
+        );
+      });
+    });
+
+    test('requestOriginal accepts correct params', () async {
+      const String id = 'SOME_ID';
+      await MultiImagePicker.requestOriginal(id);
+
+      expect(
+        log,
+        <Matcher>[
+          isMethodCall('requestOriginal', arguments: <String, dynamic>{
+            'identifier': id,
+          }),
+        ],
+      );
+    });
+
+    group('#requestThumbnail', () {
+      const String id = 'SOME_ID';
+      const int width = 100;
+      const int height = 200;
+      test('accepts correct params', () async {
+        await MultiImagePicker.requestThumbnail(id, width, height);
+
+        expect(
+          log,
+          <Matcher>[
+            isMethodCall('requestThumbnail', arguments: <String, dynamic>{
+              'identifier': id,
+              'width': width,
+              'height': height,
+            }),
+          ],
+        );
+      });
+
+      test('does not accept a negative width or height', () {
+        expect(
+          MultiImagePicker.requestThumbnail(id, -100, height),
+          throwsArgumentError,
+        );
+
+        expect(
+          MultiImagePicker.requestThumbnail(id, width, -100),
           throwsArgumentError,
         );
       });
