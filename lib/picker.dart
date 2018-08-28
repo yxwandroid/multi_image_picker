@@ -13,6 +13,12 @@ class MultiImagePicker {
     @required int maxImages,
     CupertinoOptions options = const CupertinoOptions(),
   }) async {
+    assert(maxImages != null);
+
+    if (maxImages != null && maxImages < 0) {
+      throw new ArgumentError.value(maxImages, 'maxImages cannot be negative');
+    }
+
     final List<dynamic> images =
         await _channel.invokeMethod('pickImages', <String, dynamic>{
       'maxImages': maxImages,
@@ -29,6 +35,18 @@ class MultiImagePicker {
 
   static Future<bool> requestThumbnail(
       String identifier, int width, int height) async {
+    assert(identifier != null);
+    assert(width != null);
+    assert(height != null);
+
+    if (width != null && width < 0) {
+      throw new ArgumentError.value(width, 'width cannot be negative');
+    }
+
+    if (height != null && height < 0) {
+      throw new ArgumentError.value(height, 'height cannot be negative');
+    }
+
     bool ret =
         await _channel.invokeMethod("requestThumbnail", <String, dynamic>{
       "identifier": identifier,

@@ -39,7 +39,18 @@ class Asset {
     releaseOriginal();
   }
 
-  Future<dynamic> requestThumbnail(int width, int height) {
+  Future<dynamic> requestThumbnail(int width, int height) async {
+    assert(width != null);
+    assert(height != null);
+
+    if (width != null && width < 0) {
+      throw new ArgumentError.value(width, 'width cannot be negative');
+    }
+
+    if (height != null && height < 0) {
+      throw new ArgumentError.value(height, 'height cannot be negative');
+    }
+
     Completer completer = new Completer();
     BinaryMessages.setMessageHandler(_channel, (ByteData message) {
       _thumbData = message;
