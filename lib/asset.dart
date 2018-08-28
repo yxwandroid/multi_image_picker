@@ -5,10 +5,15 @@ import 'package:multi_image_picker/picker.dart';
 
 class Asset {
   String _identifier;
+  int _originalWidth, _originalHeight;
   ByteData _thumbData;
   ByteData _imageData;
 
-  Asset(this._identifier);
+  Asset(
+    this._identifier,
+    this._originalWidth,
+    this._originalHeight,
+  );
 
   String get _channel {
     return 'multi_image_picker/image/$_identifier';
@@ -16,6 +21,22 @@ class Asset {
 
   ByteData get thumbData {
     return _thumbData;
+  }
+
+  int get originalWidth {
+    return _originalWidth;
+  }
+
+  int get originalHeight {
+    return _originalHeight;
+  }
+
+  bool get isLandscape {
+    return _originalWidth > _originalHeight;
+  }
+
+  bool get isPortrait {
+    return _originalWidth < _originalHeight;
   }
 
   ByteData get imageData {
