@@ -53,18 +53,14 @@ Customization on [iOS](https://github.com/Sh1d0w/multi_image_picker/tree/master/
 
 ## API
 
-### pickImages(maxImages: int)
+[MultiImagePicker](https://pub.dartlang.org/documentation/multi_image_picker/latest/picker/MultiImagePicker-class.html)
 
-#### maxImages
-
-Type: `int`
-
-Maximum allowed images to be selected.
+[Asset](https://pub.dartlang.org/documentation/multi_image_picker/latest/asset/Asset-class.html)
 
 ## TODO
 
 - [x] Add support for more plugin specific options for iOS and Android, that allows more customization
-- [ ] Improve docs
+- [x] Improve docs
 - [ ] Allow choosing videos
 
 ## Related
