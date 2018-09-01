@@ -7,13 +7,13 @@
 
 ## iOS
 
-<img src="screenshots/ios-1.png" height="300em" /> <img src="screenshots/ios-2.png" height="300em" /> <img src="screenshots/ios-3.png" height="300em" />
+![Screenshot iOS 1](screenshots/ios-1.png) ![Screenshot iOS 2](screenshots/ios-2.png) ![Screenshot iOS 3](screenshots/ios-3.png)
 
 For the iOS picker the plugin uses [BSImagePicker](https://github.com/mikaoj/BSImagePicker)
 
 ## Android
 
-<img src="screenshots/android-1.png" height="300em" /> <img src="screenshots/android-2.png" height="300em" /> <img src="screenshots/android-3.png" height="300em" />
+![Screenshot Anroid 1](screenshots/android-1.png) ![Screenshot Anroid 2](screenshots/android-2.png) ![Screenshot Anroid 3](screenshots/android-3.png)
 
 For the Android picker the plugin uses [Matisse](https://github.com/zhihu/Matisse)
 
