@@ -16,6 +16,7 @@ import android.net.Uri;
 import com.zhihu.matisse.Matisse;
 import com.zhihu.matisse.MimeType;
 import com.zhihu.matisse.engine.impl.GlideEngine;
+import com.zhihu.matisse.internal.entity.CaptureStrategy;
 
 import android.content.pm.ActivityInfo;
 
@@ -38,6 +39,7 @@ import android.os.AsyncTask;
 import android.provider.MediaStore;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.content.ContextCompat;
+import android.util.Log;
 
 import io.flutter.plugin.common.BinaryMessenger;
 import io.flutter.plugin.common.MethodCall;
@@ -244,6 +246,8 @@ public class MultiImagePickerPlugin implements MethodCallHandler, PluginRegistry
 
         try {
             cursor = context.getContentResolver().query(uri, projection, selection, selectionArgs, null);
+            Log.d("DEBUG_MSG" , "url : " + uri.toString()) ;
+
             if (cursor != null && cursor.moveToFirst()) {
                 final int column_index = cursor.getColumnIndexOrThrow(column);
                 return cursor.getString(column_index);
@@ -264,7 +268,7 @@ public class MultiImagePickerPlugin implements MethodCallHandler, PluginRegistry
             for (Uri uri : photos) {
                 HashMap<String, Object> map = new HashMap<>();
                 map.put("identifier", uri.toString());
-
+                map.put("filePath", FileDirectory.getPath(context, uri)) ;
                 InputStream is = null;
                 Integer width = 0;
                 Integer height = 0;
