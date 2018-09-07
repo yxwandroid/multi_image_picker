@@ -10,6 +10,7 @@ import android.content.pm.PackageManager;
 import android.database.Cursor;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
+import android.media.MediaScannerConnection;
 import android.media.ThumbnailUtils;
 import android.net.Uri;
 
@@ -36,6 +37,8 @@ import java.util.List;
 
 import android.Manifest;
 import android.os.AsyncTask;
+import android.os.Build;
+import android.os.Environment;
 import android.provider.MediaStore;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.content.ContextCompat;
@@ -56,6 +59,10 @@ import static android.media.ThumbnailUtils.OPTIONS_RECYCLE_INPUT;
  * MultiImagePickerPlugin
  */
 public class MultiImagePickerPlugin implements MethodCallHandler, PluginRegistry.ActivityResultListener {
+    public interface Refresh {
+        void after() ;
+    }
+
     private static final String CHANNEL_NAME = "multi_image_picker";
     private static final String REQUEST_THUMBNAIL = "requestThumbnail";
     private static final String REQUEST_ORIGINAL = "requestOriginal";
@@ -224,15 +231,42 @@ public class MultiImagePickerPlugin implements MethodCallHandler, PluginRegistry
 
     }
 
+    private void refreshGallery(final MultiImagePickerPlugin.Refresh refresh) {
+
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.KITKAT)
+        {
+            MediaScannerConnection.scanFile(context, new String[] { Environment.getExternalStorageDirectory().toString() }, null, new MediaScannerConnection.OnScanCompletedListener() {
+                public void onScanCompleted(String path, Uri uri)
+                {
+                    Log.i("ExternalStorage", "Scanned " + path + ":");
+                    Log.i("ExternalStorage", "-> uri=" + uri);
+                    refresh.after();
+                }
+            });
+        }
+        else
+        {
+            context.sendBroadcast(new Intent(Intent.ACTION_MEDIA_MOUNTED, Uri.parse("file://" + Environment.getExternalStorageDirectory())));
+            refresh.after();
+        }
+    }
+
+
     private void presentPicker() {
-        int maxImages = this.methodCall.argument(MAX_IMAGES);
-        Matisse.from(this.activity)
-                .choose(MimeType.ofImage())
-                .countable(true)
-                .maxSelectable(maxImages)
-                .restrictOrientation(ActivityInfo.SCREEN_ORIENTATION_UNSPECIFIED)
-                .imageEngine(new GlideEngine())
-                .forResult(REQUEST_CODE_CHOOSE);
+
+        this.refreshGallery(new Refresh() {
+            @Override
+            public void after() {
+                int maxImages = MultiImagePickerPlugin.this.methodCall.argument(MAX_IMAGES);
+                Matisse.from(MultiImagePickerPlugin.this.activity)
+                        .choose(MimeType.ofImage())
+                        .countable(true)
+                        .maxSelectable(maxImages)
+                        .restrictOrientation(ActivityInfo.SCREEN_ORIENTATION_UNSPECIFIED)
+                        .imageEngine(new GlideEngine())
+                        .forResult(REQUEST_CODE_CHOOSE);
+            }
+        });
     }
 
     private static String getDataColumn(Context context, Uri uri, String selection,
