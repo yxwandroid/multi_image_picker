@@ -67,6 +67,7 @@ public class MultiImagePickerPlugin implements MethodCallHandler, PluginRegistry
     private static final String REQUEST_THUMBNAIL = "requestThumbnail";
     private static final String REQUEST_ORIGINAL = "requestOriginal";
     private static final String PICK_IMAGES = "pickImages";
+    private static final String REFRESH_IMAGE = "refreshImage" ;
     private static final String MAX_IMAGES = "maxImages";
     private static final int REQUEST_CODE_CHOOSE = 1001;
     private static final int REQUEST_CODE_GRANT_PERMISSIONS = 2001;
@@ -201,6 +202,9 @@ public class MultiImagePickerPlugin implements MethodCallHandler, PluginRegistry
             GetThumbnailTask task = new GetThumbnailTask(this.messenger, identifier, path, width, height);
             task.execute("");
             finishWithSuccess(true);
+        } else if (REFRESH_IMAGE.equals(call.method)) {
+            String path = call.argument("path") ;
+            refreshGallery(path);
         } else {
             pendingResult.notImplemented();
         }
@@ -231,6 +235,26 @@ public class MultiImagePickerPlugin implements MethodCallHandler, PluginRegistry
 
     }
 
+    private void refreshGallery(String path) {
+        try {
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.KITKAT) {
+                MediaScannerConnection.scanFile(context, new String[]{path}, null, new MediaScannerConnection.OnScanCompletedListener() {
+                    public void onScanCompleted(String path, Uri uri) {
+                        Log.i("ExternalStorage", "Scanned " + path + ":");
+                        Log.i("ExternalStorage", "-> uri=" + uri);
+                        finishWithSuccess(true);
+                    }
+                });
+            } else {
+                context.sendBroadcast(new Intent(Intent.ACTION_MEDIA_MOUNTED, Uri.parse("file://" + Environment.getExternalStorageDirectory())));
+                finishWithSuccess(true);
+            }
+        } catch (Exception e) {
+            finishWithError("unknown error", e.toString());
+        }
+    }
+
+    /*
     private void refreshGallery(final MultiImagePickerPlugin.Refresh refresh) {
 
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.KITKAT)
@@ -249,11 +273,20 @@ public class MultiImagePickerPlugin implements MethodCallHandler, PluginRegistry
             context.sendBroadcast(new Intent(Intent.ACTION_MEDIA_MOUNTED, Uri.parse("file://" + Environment.getExternalStorageDirectory())));
             refresh.after();
         }
-    }
+    }*/
 
 
     private void presentPicker() {
+        int maxImages = MultiImagePickerPlugin.this.methodCall.argument(MAX_IMAGES);
+        Matisse.from(MultiImagePickerPlugin.this.activity)
+                .choose(MimeType.ofImage())
+                .countable(true)
+                .maxSelectable(maxImages)
+                .restrictOrientation(ActivityInfo.SCREEN_ORIENTATION_UNSPECIFIED)
+                .imageEngine(new GlideEngine())
+                .forResult(REQUEST_CODE_CHOOSE);
 
+        /*
         this.refreshGallery(new Refresh() {
             @Override
             public void after() {
@@ -267,6 +300,7 @@ public class MultiImagePickerPlugin implements MethodCallHandler, PluginRegistry
                         .forResult(REQUEST_CODE_CHOOSE);
             }
         });
+        */
     }
 
     private static String getDataColumn(Context context, Uri uri, String selection,
