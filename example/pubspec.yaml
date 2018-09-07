@@ -14,8 +14,6 @@ dev_dependencies:
     sdk: flutter
 
   multi_image_picker:
-    #git: 
-    #  url: https://github.com/CircleCurve/multi_image_picker.git
     path: ../
 
 # For information on the generic Dart part of this file, see the

@@ -17,7 +17,6 @@ import android.net.Uri;
 import com.zhihu.matisse.Matisse;
 import com.zhihu.matisse.MimeType;
 import com.zhihu.matisse.engine.impl.GlideEngine;
-import com.zhihu.matisse.internal.entity.CaptureStrategy;
 
 import android.content.pm.ActivityInfo;
 
@@ -254,28 +253,6 @@ public class MultiImagePickerPlugin implements MethodCallHandler, PluginRegistry
         }
     }
 
-    /*
-    private void refreshGallery(final MultiImagePickerPlugin.Refresh refresh) {
-
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.KITKAT)
-        {
-            MediaScannerConnection.scanFile(context, new String[] { Environment.getExternalStorageDirectory().toString() }, null, new MediaScannerConnection.OnScanCompletedListener() {
-                public void onScanCompleted(String path, Uri uri)
-                {
-                    Log.i("ExternalStorage", "Scanned " + path + ":");
-                    Log.i("ExternalStorage", "-> uri=" + uri);
-                    refresh.after();
-                }
-            });
-        }
-        else
-        {
-            context.sendBroadcast(new Intent(Intent.ACTION_MEDIA_MOUNTED, Uri.parse("file://" + Environment.getExternalStorageDirectory())));
-            refresh.after();
-        }
-    }*/
-
-
     private void presentPicker() {
         int maxImages = MultiImagePickerPlugin.this.methodCall.argument(MAX_IMAGES);
         Matisse.from(MultiImagePickerPlugin.this.activity)
@@ -285,22 +262,6 @@ public class MultiImagePickerPlugin implements MethodCallHandler, PluginRegistry
                 .restrictOrientation(ActivityInfo.SCREEN_ORIENTATION_UNSPECIFIED)
                 .imageEngine(new GlideEngine())
                 .forResult(REQUEST_CODE_CHOOSE);
-
-        /*
-        this.refreshGallery(new Refresh() {
-            @Override
-            public void after() {
-                int maxImages = MultiImagePickerPlugin.this.methodCall.argument(MAX_IMAGES);
-                Matisse.from(MultiImagePickerPlugin.this.activity)
-                        .choose(MimeType.ofImage())
-                        .countable(true)
-                        .maxSelectable(maxImages)
-                        .restrictOrientation(ActivityInfo.SCREEN_ORIENTATION_UNSPECIFIED)
-                        .imageEngine(new GlideEngine())
-                        .forResult(REQUEST_CODE_CHOOSE);
-            }
-        });
-        */
     }
 
     private static String getDataColumn(Context context, Uri uri, String selection,

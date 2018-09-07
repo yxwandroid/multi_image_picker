@@ -54,7 +54,6 @@ class _MyAppState extends State<MyApp> {
 
     setState(() {
       images = resultList;
-      // print(images[0].filePath) ; 
       if (error == null) _error = 'No Error Dectected';
     });
   }
