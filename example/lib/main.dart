@@ -68,6 +68,7 @@ class _MyAppState extends State<MyApp> {
         body: Column(
           children: <Widget>[
             Center(child: Text('Error: $_error')),
+            Text('File path: ${ images.length > 1 ? images[0].path : "" }'),
             RaisedButton(
               child: Text("Pick images"),
               onPressed: loadAssets,
