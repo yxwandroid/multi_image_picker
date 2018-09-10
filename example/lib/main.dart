@@ -68,9 +68,6 @@ class _MyAppState extends State<MyApp> {
         body: Column(
           children: <Widget>[
             Center(child: Text('Error: $_error')),
-            Column(
-              children: images.map( (image) => Text(images[0].path)).toList(),
-            ),
             RaisedButton(
               child: Text("Pick images"),
               onPressed: loadAssets,
