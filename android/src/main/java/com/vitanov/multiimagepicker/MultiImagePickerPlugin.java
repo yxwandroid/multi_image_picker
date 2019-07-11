@@ -20,7 +20,6 @@ import com.zhihu.matisse.engine.impl.GlideEngine;
 
 import android.content.pm.ActivityInfo;
 
-import java.io.BufferedInputStream;
 import java.io.ByteArrayOutputStream;
 import java.io.File;
 import java.io.FileInputStream;
@@ -28,7 +27,6 @@ import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.InputStream;
 import java.nio.ByteBuffer;
-import java.nio.channels.FileChannel;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.HashMap;
@@ -38,10 +36,11 @@ import android.Manifest;
 import android.os.AsyncTask;
 import android.os.Build;
 import android.os.Environment;
-import android.provider.MediaStore;
-import android.support.v4.app.ActivityCompat;
-import android.support.v4.content.ContextCompat;
+
 import android.util.Log;
+
+import androidx.core.app.ActivityCompat;
+import androidx.core.content.ContextCompat;
 
 import io.flutter.plugin.common.BinaryMessenger;
 import io.flutter.plugin.common.MethodCall;
@@ -84,6 +83,7 @@ public class MultiImagePickerPlugin implements MethodCallHandler, PluginRegistry
         this.messenger = messenger;
     }
 
+
     /**
      * Plugin registration.
      */
@@ -123,9 +123,23 @@ public class MultiImagePickerPlugin implements MethodCallHandler, PluginRegistry
 
             final ByteBuffer buffer = ByteBuffer.allocateDirect(byteArray.length);
             buffer.put(byteArray);
-            this.messenger.send("multi_image_picker/image/" + this.identifier, buffer);
+            activity.runOnUiThread(new Runnable() {
+                @Override
+                public void run() {
+                    messenger.send("multi_image_picker/image/" +identifier, buffer);
+                }
+            });
+
             return null;
         }
+
+
+//        @Override
+//        protected void onPostExecute(Void aVoid) {
+//            super.onPostExecute(aVoid);
+//            messenger.send("multi_image_picker/image/" +identifier, buffer);
+//
+//        }
     }
 
     private class GetImageTask extends AsyncTask<String, Void, Void> {
@@ -168,9 +182,22 @@ public class MultiImagePickerPlugin implements MethodCallHandler, PluginRegistry
             }
             final ByteBuffer buffer = ByteBuffer.allocateDirect(bytesArray.length);
             buffer.put(bytesArray);
-            this.messenger.send("multi_image_picker/image/" + this.identifier, buffer);
+//            this.messenger.send("multi_image_picker/image/" + this.identifier, buffer);
+            activity.runOnUiThread(new Runnable() {
+                @Override
+                public void run() {
+                    messenger.send("multi_image_picker/image/" +identifier, buffer);
+                }
+            });
             return null;
         }
+//        onPostExecute
+
+//        @Override
+//        protected void onPostExecute(Void aVoid) {
+//            super.onPostExecute(aVoid);
+//            messenger.send("multi_image_picker/image/" +identifier, buffer);
+//        }
     }
 
     @Override

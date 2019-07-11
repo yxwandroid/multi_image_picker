@@ -80,14 +80,25 @@ public class SwiftMultiImagePickerPlugin: NSObject, FlutterPlugin {
                 }, finish: { (assets: [PHAsset]) -> Void in
                     var results = [NSDictionary]();
                     for asset in assets {
-                        results.append([
-                            "identifier": asset.localIdentifier,
-                            "width": asset.pixelWidth,
-                            "height": asset.pixelHeight,
-                            "filePath" : "",
-                        ]);
+                       
+                        let options: PHContentEditingInputRequestOptions = PHContentEditingInputRequestOptions()
+                       
+                        var filePath:URL?
+                        asset.requestContentEditingInput(with: options, completionHandler: { (contentEditingInput, info) in
+                            print(contentEditingInput?.fullSizeImageURL?.absoluteString)
+                            filePath = (contentEditingInput?.fullSizeImageURL)
+                            
+                            results.append([
+                                "identifier": asset.localIdentifier,
+                                "width": asset.pixelWidth,
+                                "height": asset.pixelHeight,
+                                "filePath" :filePath?.absoluteString,
+                                ]);
+                            result(results);
+                        })
+                     
                     }
-                    result(results);
+                  
                 }, completion: nil)
         case "requestThumbnail":
             let arguments = call.arguments as! Dictionary<String, AnyObject>
@@ -160,6 +171,16 @@ public class SwiftMultiImagePickerPlugin: NSObject, FlutterPlugin {
         }
     }
 
+   
+    
+    func getURL(ofPhotoWith mPhasset: PHAsset) {
+        if mPhasset.mediaType == .image {
+            let options: PHContentEditingInputRequestOptions = PHContentEditingInputRequestOptions()
+            mPhasset.requestContentEditingInput(with: options, completionHandler: { (contentEditingInput, info) in
+                print(contentEditingInput?.fullSizeImageURL)
+            })
+        }
+    }
     func hexStringToUIColor (hex:String) -> UIColor {
         var cString:String = hex.trimmingCharacters(in: .whitespacesAndNewlines).uppercased()
 

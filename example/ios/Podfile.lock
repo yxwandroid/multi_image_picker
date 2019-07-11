@@ -29,9 +29,9 @@ SPEC CHECKSUMS:
   BSGridCollectionViewLayout: 1a7d6f30517d3c9d181774bc74be4dfcab7b8115
   BSImagePicker: b06623bd22f1941bbb04168426b95d38017e3081
   BSImageView: ed9c50d917111d8cac66c21c5a41c03f57908819
-  Flutter: 9d0fac939486c9aba2809b7982dfdbb47a7b0296
-  multi_image_picker: c94f10d464a70615cfad175d861be4cfb9511c98
+  Flutter: 58dd7d1b27887414a370fcccb9e645c08ffd7a6a
+  multi_image_picker: d6218e14fc4bb41d1b96e56bec591b7bc256e599
 
 PODFILE CHECKSUM: ec81a62fe73c7b29f2764dd3fe8c221958ac6739
 
-COCOAPODS: 1.5.3
+COCOAPODS: 1.7.0.beta.3
