@@ -92,7 +92,7 @@ public class SwiftMultiImagePickerPlugin: NSObject, FlutterPlugin {
                                 "identifier": asset.localIdentifier,
                                 "width": asset.pixelWidth,
                                 "height": asset.pixelHeight,
-                                "filePath" :filePath?.,
+                                "filePath" :filePath?.absoluteString,
                                 ]);
                             result(results);
                         })
