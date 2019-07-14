@@ -1,3 +1,5 @@
+import 'dart:io';
+
 import 'package:flutter/material.dart';
 import 'dart:async';
 
@@ -16,7 +18,7 @@ class MyApp extends StatefulWidget {
 class _MyAppState extends State<MyApp> {
   List<Asset> images = List<Asset>();
   String _error;
-
+  var path;
   @override
   void initState() {
     super.initState();
@@ -47,9 +49,7 @@ class _MyAppState extends State<MyApp> {
       error = e.message;
     }
 
-
-
-//    print(images.elementAt(0).path);
+    //    print(images.elementAt(0).path);
     // If the widget was removed from the tree while the asynchronous platform
     // message was in flight, we want to discard the reply rather than calling
     // setState to update our non-existent appearance.
@@ -57,10 +57,26 @@ class _MyAppState extends State<MyApp> {
 
     setState(() {
       images = resultList;
+      String  tempPath = images.elementAt(0).path;
 
+      path =  tempPath.replaceAll("file://", "");
+      print(path);
 
       if (error == null) _error = 'No Error Dectected';
     });
+  }
+
+  /*图片控件*/
+  Widget _ImageView(imgPath) {
+    if (imgPath == null) {
+      return Center(
+        child: Text("请选择图片或拍照"),
+      );
+    } else {
+      return Image.file(
+        File(path),
+      );
+    }
   }
 
   @override
@@ -77,9 +93,10 @@ class _MyAppState extends State<MyApp> {
               child: Text("Pick images"),
               onPressed: loadAssets,
             ),
-            Expanded(
-              child: buildGridView(),
-            )
+            _ImageView(path),
+//            Expanded(
+//              child: buildGridView(),
+//            )
           ],
         ),
       ),
