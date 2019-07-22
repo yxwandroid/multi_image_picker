@@ -43,7 +43,7 @@ class _MyAppState extends State<MyApp> {
 
     try {
       resultList = await MultiImagePicker.pickImages(
-        maxImages: 300,
+        maxImages: 6,
       );
     } on PlatformException catch (e) {
       error = e.message;
